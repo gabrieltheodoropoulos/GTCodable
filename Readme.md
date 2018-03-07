@@ -33,31 +33,32 @@ GTCodable Provided Functions At A Glance
 
 Here’s a list of functions provided by the GTCodable protocol. Names are self explanatory, and more details about each function exist in the next parts.
 
-    func toJson() -> Data?
-    func toJSON(fromDictionary:) -> Data?
-    func toDictionary() -> [String: Any]
-    func toDictionary(fromJson:) -> [String: Any]?
-    func archive() -> Data
-    func save(json:toURL:) -> Bool
-    func saveJSON() -> Bool
-    func savePlist(fromDictionary:toURL:) -> Bool
-    func savePlist() -> Bool
-    func save(archive:toURL:) -> Bool
-    func saveArchive() -> Bool
-    func loadJSON(fromURL:) -> Data?
-    func loadPlist(fromURL:) -> [String: Any]?
-    func loadArchive(fromURL:) -> Data?
-    mutating func initialize(usingJSON:) -> Bool
-    mutating func initialize(usingPlist:) -> Bool
-    mutating func initialize(usingArchive:) -> Bool
-    mutating func initFromJSON() -> Bool
-    mutating func initFromPlist() -> Bool
-    mutating func initFromArchive() -> Bool
-    func getDocDirPath() -> String
-    func getRaw() -> Any?
-    func getTextualRepresentation(fromJson:) -> String?
-    func describeSelf() -> String
-    
+```swift
+func toJson() -> Data?
+func toJSON(fromDictionary:) -> Data?
+func toDictionary() -> [String: Any]
+func toDictionary(fromJson:) -> [String: Any]?
+func archive() -> Data
+func save(json:toURL:) -> Bool
+func saveJSON() -> Bool
+func savePlist(fromDictionary:toURL:) -> Bool
+func savePlist() -> Bool
+func save(archive:toURL:) -> Bool
+func saveArchive() -> Bool
+func loadJSON(fromURL:) -> Data?
+func loadPlist(fromURL:) -> [String: Any]?
+func loadArchive(fromURL:) -> Data?
+mutating func initialize(usingJSON:) -> Bool
+mutating func initialize(usingPlist:) -> Bool
+mutating func initialize(usingArchive:) -> Bool
+mutating func initFromJSON() -> Bool
+mutating func initFromPlist() -> Bool
+mutating func initFromArchive() -> Bool
+func getDocDirPath() -> String
+func getRaw() -> Any?
+func getTextualRepresentation(fromJson:) -> String?
+func describeSelf() -> String
+```
 
 GTCodable protocol contains some additional private functions that perform important work behind the scenes, but there’s no need to be listed here as they are not publicly available.
 
@@ -66,32 +67,42 @@ Using GTCodable
 
 Consider the following `struct` that conforms to GTCodable protocol:
 
-    struct User: GTCodable {
-        var id: Int?
-        var username: String?
-        var email: String?
-        var avatarFile: String?
-    }
+```swift
+struct User: GTCodable {
+    var id: Int?
+    var username: String?
+    var email: String?
+    var avatarFile: String?
+}
+```
 
 Let’s initialise an object of type `User`:
 
-    var user = User()
-    user.id = 11
-    user.username = "superman"
-    user.email = "superman@superheroes.org”
-    user.avatarFile = "superman.png"
+```swift
+var user = User()
+user.id = 11
+user.username = "superman"
+user.email = "superman@superheroes.org”
+user.avatarFile = "superman.png"
+```
 
 Then, encoding into JSON and saving to file:
 
-    _ = user.saveJSON()
+```swift
+_ = user.saveJSON()
+```
 
 Saving a _Plist_ file containing the properties and their values:
 
-    _ = user.savePlist()
+```swift
+_ = user.savePlist()
+```
 
 Archiving and saving to file:
 
-    _ = user.saveArchive()
+```swift
+_ = user.saveArchive()
+```
 
 The outcome:
 
@@ -111,11 +122,13 @@ Note that a directory called “appdata” is created automatically in the docum
 
 Besides the above convenient functions to save an object using different formats by calling a single method only, you can also use the following methods to encode or convert and get the results as objects:
 
-    if let json = user.toJson() {
-        if let jsonToString = user.getTextualRepresentation(fromJson: json) {
-            print(jsonToString)
-        }
+```swift
+if let json = user.toJson() {
+    if let jsonToString = user.getTextualRepresentation(fromJson: json) {
+        print(jsonToString)
     }
+}
+```
 
 The `toJson()` function returns a JSON encoded object, if encoding is successful. The `getTextualRepresentation(fromJson:)` is another function provided by the GTCodable protocol, and returns a textual representation of a JSON object as its name suggests. Here’s what it’s printed:
 
@@ -128,56 +141,65 @@ The `toJson()` function returns a JSON encoded object, if encoding is successful
 
 To get an archived object:
 
-    let archive = user.archive()
-    // archive is a Data object. Do something with it.
+```swift
+let archive = user.archive()
+// archive is a Data object. Do something with it.
+```
 
 However, one of the most interesting cases is that you can get a _dictionary_ containing all properties and their values, which practically means that _you can convert an object into a `[String: Any]` dictionary_:
 
-    let dictionary = user.toDictionary()
-    print(dictionary)
-    
+```swift
+let dictionary = user.toDictionary()
+print(dictionary)
+```
 
 Output:
 
-    ["avatarFile": Optional("superman.png"), "email": Optional("superman@superman.com"), "id": Optional(11), "username": Optional("superman")]
-    
+```swift
+["avatarFile": Optional("superman.png"), "email": Optional("superman@superman.com"), "id": Optional(11), "username": Optional("superman")]
+```
 
 In addition to the `toDictionary()` function, you can use another one named `toDictionary(fromJson:)` if you want to get a dictionary from a JSON object:
 
-    if let json = user.toJson() {
-        let dict = user.toDictionary(fromJson: json)
-    }
-    
+```swift
+if let json = user.toJson() {
+    let dict = user.toDictionary(fromJson: json)
+}
+```
 
 GTCodable allows you to do the exact opposite fast as well, meaning to create a JSON object based on a given dictionary. For example:
 
-    let dictionary = user.toDictionary()
-    if let json = user.toJSON(fromDictionary: dictionary) {
-        // Do something with the json object.
-    }
-    
+```swift
+let dictionary = user.toDictionary()
+if let json = user.toJSON(fromDictionary: dictionary) {
+    // Do something with the json object.
+}
+```
 
 To manually save a JSON object to a custom URL use the `save(json:toURL:)` function:
 
-    if let json = user.toJson() {    
-        let url = [A custom URL]
-        user.save(json: json, toURL: url)
-    }
-    
+```swift
+if let json = user.toJson() {    
+    let url = [A custom URL]
+    user.save(json: json, toURL: url)
+}
+```
 
 In a similar fashion, you can manually save a dictionary to a custom URL:
 
-    let dictionary = user.toDictionary()
-    let url = [A custom URL]
-    user.savePlist(fromDictionary: dictionary, toURL: url)
-    
+```swift
+let dictionary = user.toDictionary()
+let url = [A custom URL]
+user.savePlist(fromDictionary: dictionary, toURL: url)
+```
 
 Same as above, if you have an archived object you can manually save it in case you don’t want to use the `saveArchive()` convenient function:
 
-    let archive = user.archive()
-    let url = [A custom URL]
-    user.save(archive: archive, toURL: url)
-    
+```swift
+let archive = user.archive()
+let url = [A custom URL]
+user.save(archive: archive, toURL: url)
+```
 
 ### Loading and Initializing With GTCodable Protocol
 
@@ -185,59 +207,71 @@ Going to the opposite direction, here’s how to load data from files that were 
 
 Loading from from the default JSON file:
 
-    var anotherUser = User()
-    _ = anotherUser.initFromJSON()
+```swift
+var anotherUser = User()
+_ = anotherUser.initFromJSON()
+```
 
 From the default Plist file:
 
-    _ = anotherUser.initFromPlist()
+```swift
+_ = anotherUser.initFromPlist()
+```
 
 And from the default file with archived data:
 
-    _ = anotherUser.initFromArchive()
+```swift
+_ = anotherUser.initFromArchive()
+```
 
 These three functions return a `Bool` value indicating whether each action was performed successfully or not.
 
 Except for the above convenient and fast functions, you can also load manually from custom URLs. Here’s how you can load JSON data:
 
-    let url = [A custom URL]
-    if let json = user.loadJSON(fromURL: url) {
-        // json is a Data object, do something with it.
-    }
-    
+```swift
+let url = [A custom URL]
+if let json = user.loadJSON(fromURL: url) {
+    // json is a Data object, do something with it.
+} 
+```
 
 Loading from a Plist file:
 
-    let url = [A custom URL]
-    if let dict = user.loadPlist(fromURL: url) {
-        // dict is a [String: Any] object, do something with it.
-    }
-    
+```swift
+let url = [A custom URL]
+if let dict = user.loadPlist(fromURL: url) {
+    // dict is a [String: Any] object, do something with it.
+}
+```
 
 Loading archived data:
 
-    let url = [A custom URL]
-    if let archive = user.loadArchive(fromURL: url) {
-        // archive is a Data object, do something with it.
-    }
-    
+```swift
+let url = [A custom URL]
+if let archive = user.loadArchive(fromURL: url) {
+    // archive is a Data object, do something with it.
+}
+```
 
 Lastly, you can populate data from a JSON object, dictionary, or an archive to a GTCodable-conforming object using any of the three “initialize(using…)” functions demonstrated next.
 
-    var user = User()
-    let json = [A JSON object]
-    _ = user.initialize(usingJSON: json)
-    
+```swift
+var user = User()
+let json = [A JSON object]
+_ = user.initialize(usingJSON: json)
+```
 
-    var user = User()
-    let dict = [A [String: Any] dictionary]
-    _ = user.initialize(usingPlist: dict)
-    
+```swift
+var user = User()
+let dict = [A [String: Any] dictionary]
+_ = user.initialize(usingPlist: dict)    
+```
 
-    var user = User()
-    let arhive = [A NSKeyedArchiver object]
-    _ = user.initialize(usingArchive: archive)
-    
+```swift
+var user = User()
+let arhive = [A NSKeyedArchiver object]
+_ = user.initialize(usingArchive: archive)    
+```
 
 Excluding Properties
 --------------------
@@ -246,39 +280,45 @@ You won’t always want to include all properties when encoding an object as JSO
 
 In action, and in the `User` struct, the easiest way to do it is as shown next:
 
-    struct User: GTCodable {
-        // Other property declarations here.
-       
-        var excludedProperties = ["avatarFile"]
-    }
-    
+```swift
+struct User: GTCodable {
+    // Other property declarations here.
+
+    var excludedProperties = ["avatarFile"]
+}    
+```
 
 Of course, if more properties had to be ignored, then their names should be appended to that array. The following excludes not only the `avatarFile`, but the `id` and `username` properties as well:
 
-    var excludedProperties = ["avatarFile", "id", "username"]
-    
+```swift
+var excludedProperties = ["avatarFile", "id", "username"]    
+```
 
 It’s really important to stress this: _Properties you want to be excluded from encoding or conversion must be declared as Optionals_, like for example the following property:
 
-    var avatarFile: String?
-    
+```swift
+var avatarFile: String? 
+```
 
 in the `User` struct. This is a rule, and please respect it to avoid problems.
 
 As an alternative, the `excludedProperties` array can be declared in the struct as Optional:
 
-    struct User: GTCodable {
-        // Other property declarations.
-        
-        var excludedProperties: [String]?
-    }
-    
+```swift
+struct User: GTCodable {
+    // Other property declarations.
+
+    var excludedProperties: [String]?
+} 
+```
 
 Then, and after the initialisation of a `User` object, we can add values to it:
 
-    var user = User()
-    
-    user.excludedProperties = ["avatarFile"]
+```swift
+var user = User()
+
+user.excludedProperties = ["avatarFile"]
+```
 
 Always make sure that the property names you add to the `excludedProperties` array match to the actual names and there are no typos.
 
@@ -287,72 +327,79 @@ Advanced Usage
 
 The samples demonstrated previously are quite simple, and of course GTCodable’s powerfulness doesn’t stop there. Let’s extend our example by creating the following struct:
 
-    struct AdditionalInfo: GTCodable {
-        var firstName: String?
-        var lastName: String?
-        var gender: Gender?
-        
-        enum Gender: Int, GTCodable {
-            case male = 1
-            case female
-        }
+```swift
+struct AdditionalInfo: GTCodable {
+    var firstName: String?
+    var lastName: String?
+    var gender: Gender?
+
+    enum Gender: Int, GTCodable {
+        case male = 1
+        case female
     }
-    
+}    
+```
 
 Both the `AdditionalInfo` struct and the `Gender` enum conform to GTCodable protocol, and this is a requirement for custom types. Notice also that a specific type (Int) is defined for the `Gender` enum, which is also another requirement.
 
 Updating the `User` struct now:
 
-    struct User: GTCodable {
-        // Other property declarations
-    
-        var additionalInfo: AdditionalInfo?
-    }
-    
+```swift
+struct User: GTCodable {
+    // Other property declarations
+
+    var additionalInfo: AdditionalInfo?
+} 
+```
 
 And initialising such an object:
 
-    var user = User()
-    // Other property configuration here
-    
-    user.additionalInfo = AdditionalInfo(firstName: "Clark", lastName: "Kent", gender: .male)
-    
+```swift
+var user = User()
+// Other property configuration here
+
+user.additionalInfo = AdditionalInfo(firstName: "Clark", lastName: "Kent", gender: .male) 
+```
 
 By JSON-encoding the `user` object, the `additionalInfo` property will be included to the produced JSON data:
 
-    _ = user.saveJSON()
-    
+```swift
+_ = user.saveJSON()
 
-    {
-      "additionalInfo" : {
-        "firstName" : "Clark",
-        "gender" : 1,
-        "lastName" : "Kent"
-      },
-      "email" : "superman@superheroes.org",
-      "id" : 11,
-      "username" : "superman"
-    }
-    
+
+{
+  "additionalInfo" : {
+    "firstName" : "Clark",
+    "gender" : 1,
+    "lastName" : "Kent"
+  },
+  "email" : "superman@superheroes.org",
+  "id" : 11,
+  "username" : "superman"
+}    
+```
 
 The same, for example, will happen if we get a dictionary from the `user` object:
 
-    _ = user.toDictionary()
-    
+```swift
+_ = user.toDictionary()    
+```
 
-    ["additionalInfo": ["lastName": Optional("Kent"), "gender": 1, "firstName": Optional("Clark")], "email": Optional("superman@superheroes.org"), "id": Optional(11), "username": Optional("superman")]
-    
+```swift
+["additionalInfo": ["lastName": Optional("Kent"), "gender": 1, "firstName": Optional("Clark")], "email": Optional("superman@superheroes.org"), "id": Optional(11), "username": Optional("superman")] 
+```
 
 What if we would want to exclude a property from the `AdditionalInfo` struct though? How would we exclude the `lastName`?
 
 To do that, declare the `excludedProperties` String array in the `AdditionalInfo` struct, and add the name of the property or properties you want to be ignored:
 
-    struct AdditionalInfo: GTCodable {
-        // Other property declarations
-    
-        var excludedProperties = ["lastName"]
-    }
-    
+```swift
+struct AdditionalInfo: GTCodable {
+    // Other property declarations
+
+    var excludedProperties = ["lastName"]
+} 
+```
 
 In the output JSON the last name is missing now:
 
@@ -369,49 +416,56 @@ In the output JSON the last name is missing now:
 
 Alternatively, you can add values to the `excludedProperties` array while configuring the `user` object. At first, you need to declare the `excludedProperties` as an optional in the `AdditionalInfo` struct:
 
-    struct AdditionalInfo: GTCodable {
-        // Other property declarations
-    
-        var excludedProperties: [String]?
-    }
+```swift
+struct AdditionalInfo: GTCodable {
+    // Other property declarations
+
+    var excludedProperties: [String]?
+}
+```
 
 Then:
 
-    var user = User()
-    // Other User property configuration here
-    
-    user.additionalInfo = AdditionalInfo(firstName: "Clark", lastName: "Kent", gender: .male)
-    user.additionalInfo?.excludedProperties = ["lastName"]
+```swift
+var user = User()
+// Other User property configuration here
+
+user.additionalInfo = AdditionalInfo(firstName: "Clark", lastName: "Kent", gender: .male)
+user.additionalInfo?.excludedProperties = ["lastName"]
+```
 
 **Important Tip**: Suppose that you have properties to ignore in the `AdditionalInfo` struct, but not in the `User`, which contains an object of the `AdditionalInfo`. Normally, you would expect to declare the `excludedProperties` array in the `AdditionalInfo` only. But not! Even if there are not excluded properties in the container class or struct (in our scenario in the `User` struct) but exist in the contained custom types, then _you have to mandatorily declare the `excludedProperties` array and initialize it in the container structure, without adding any content to it_.
 
 That means that even if we wouldn’t have any properties to exclude in the `User` struct, we would still need to declare the following without adding any values:
 
-    var excludedProperties = [String]()
-    
+```swift
+var excludedProperties = [String]() 
+```
 
 A GTCodable-conforming custom type can contain collections or dictionaries with GTCodable-conforming types as well. Consider the following array in the `User` struct:
 
-    struct User: GTCodable {
-        // Other property declarations
-        
-        var buddies: [User]?
-    }
-    
+```swift
+struct User: GTCodable {
+    // Other property declarations
+
+    var buddies: [User]?
+}    
+```
 
 Let’s add a couple of buddies to our `user` object:
 
-    var user = User()
-    // Other User property configuration here
-    
-    var batman = User(id: 15, username: "batman", email: "batman@superheroes.org", avatarFile: "batman.png")
-    batman.additionalInfo = AdditionalInfo(firstName: "Bruce", lastName: "Wayne", gender: .male)
-    
-    var spiderman = User(id: 21, username: "spiderman", email: "spiderman@superheroes.org", avatarFile: "spiderman.png")
-    spiderman.additionalInfo = AdditionalInfo(firstName: "Peter", lastName: "Parker", gender: .male)
-    
-    user.buddies = [batman, spiderman]
-    
+```swift
+var user = User()
+// Other User property configuration here
+
+var batman = User(id: 15, username: "batman", email: "batman@superheroes.org", avatarFile: "batman.png")
+batman.additionalInfo = AdditionalInfo(firstName: "Bruce", lastName: "Wayne", gender: .male)
+
+var spiderman = User(id: 21, username: "spiderman", email: "spiderman@superheroes.org", avatarFile: "spiderman.png")
+spiderman.additionalInfo = AdditionalInfo(firstName: "Peter", lastName: "Parker", gender: .male)
+
+user.buddies = [batman, spiderman]    
+```
 
 Let’s JSON encode and see the results:
 
@@ -463,8 +517,9 @@ The `getRaw()` function returns the raw value of an enum (or more generally, a _
 
 Lastly, it’s the `describeSelf()` function. This one returns a String value that lists an object’s properties and their values. Take for example the `user` object of the `User` struct:
 
-    print(user.describeSelf())
-    
+```swift
+print(user.describeSelf())    
+```
 
 Here’s what is printed in Xcode console:
 
