@@ -23,10 +23,12 @@ With GTCodable protocol I’m not reinventing the wheel, I’m just putting toge
 
 Of course, like every new game that respects itself, there are some rules to follow, so please keep reading about how to use GTCodable, or at least read the Rules section later in this document.
 
-How to Install
+
+How to Use It
 --------------
 
-There’s no need to install, just clone or download the repository and drag the _GTCodable.swift_ file into your iOS Swift project.
+Clone or download the repository and drag the _GTCodable.swift_ file into your iOS Swift project.
+
 
 GTCodable Provided Functions At A Glance
 ----------------------------------------
@@ -62,6 +64,7 @@ func describeSelf() -> String
 
 GTCodable protocol contains some additional private functions that perform important work behind the scenes, but there’s no need to be listed here as they are not publicly available.
 
+
 Using GTCodable
 ---------------
 
@@ -82,7 +85,7 @@ Let’s initialise an object of type `User`:
 var user = User()
 user.id = 11
 user.username = "superman"
-user.email = "superman@superheroes.org”
+user.email = "superman@superheroes.org"
 user.avatarFile = "superman.png"
 ```
 
@@ -118,7 +121,7 @@ When using any of the functions that were just presented, the struct’s name is
 *   For Plist files, the _plist_ extension is appended.
 *   For archives, no extension is appended.
 
-Note that a directory called “appdata” is created automatically in the documents directory. It’s the place where GTCodable stores files and loads from.
+Note that a directory called "appdata" is created automatically in the documents directory. It’s the place where GTCodable stores files and loads from.
 
 Besides the above convenient functions to save an object using different formats by calling a single method only, you can also use the following methods to encode or convert and get the results as objects:
 
@@ -134,7 +137,7 @@ The `toJson()` function returns a JSON encoded object, if encoding is successful
 
     {
       "avatarFile" : "superman.png",
-      "email" : "superman@superheroes.org”,
+      "email" : "superman@superheroes.org",
       "id" : 11,
       "username" : "superman"
     }
@@ -253,7 +256,7 @@ if let archive = user.loadArchive(fromURL: url) {
 }
 ```
 
-Lastly, you can populate data from a JSON object, dictionary, or an archive to a GTCodable-conforming object using any of the three “initialize(using…)” functions demonstrated next.
+Lastly, you can populate data from a JSON object, dictionary, or an archive to a GTCodable-conforming object using any of the three "initialize(using…)" functions demonstrated next.
 
 ```swift
 var user = User()
@@ -507,7 +510,7 @@ Even though all previous examples contains structs only, the exact same principl
 Other Features
 --------------
 
-The most important and vital functions of the GTCodable protocol have been already presented and explained. However, GTCodable comes with a few more additional, auxiliary, let’s say “bonus” functions that can make our work a little bit faster.
+The most important and vital functions of the GTCodable protocol have been already presented and explained. However, GTCodable comes with a few more additional, auxiliary, let’s say "bonus" functions that can make our work a little bit faster.
 
 We have already seen the first one; it’s the `getTextualRepresentation(fromJson:)` and returns a textual representation of a JSON object. You can use it with any JSON encoded object, not only those you create with GTCodable.
 
