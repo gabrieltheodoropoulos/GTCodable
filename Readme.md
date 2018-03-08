@@ -279,7 +279,7 @@ _ = user.initialize(usingArchive: archive)
 Excluding Properties
 --------------------
 
-You won’t always want to include all properties when encoding an object as JSON or converting to dictionary. Suppose, for example, that we don’t want to include the `avatarFile` property when saving our JSON encoded data to file. With GTCodable is really easy to ignore properties, as all you need is _to declare an array of String objects named_ mandatorily* **excludedProperties**, and append the names of the properties you want to be excluded to it*.
+You won’t always want to include all properties when encoding an object as JSON or converting to dictionary. Suppose, for example, that we don’t want to include the `avatarFile` property when saving our JSON encoded data to file. With GTCodable is really easy to ignore properties, as all you need is _to declare an array of String objects named mandatorily **excludedProperties**, and append the names of the properties you want to be excluded to it_.
 
 In action, and in the `User` struct, the easiest way to do it is as shown next:
 
