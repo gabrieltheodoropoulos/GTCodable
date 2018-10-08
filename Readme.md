@@ -1,7 +1,7 @@
 About GTCodable
 ---------------
 
-I’ve been always wanted to have a really fast and natural way to save data to file when making iOS projects. Something that wouldn’t require from me to write again and again the same lines of code, even the simplest ones so I can extract some data out of an object and save it persistently to my app’s documents directory. Something that would be easy to remember and use, and why not, something that would give me a variety of saving options?
+As an iOS developer, I always wanted to have a really fast and natural way to convert data kept in a class or struct properties to dictionaries (key-value pairs), to JSON, or Plist files and vice versa. I wanted that mechanism to be totally generic and datatype independent, regardless of the number of properties and their kind existing in a class or a struct. I would always like to have a tool that would let me convert an object's data so it's easy to use them in RESTful APIs, or to assign fetched values to object properties without much effort. I've also wanted to make it easy to save objects' data to files into the documents directory if possible in one move only, and to initialise objects by loading the stored data. And on top of all, I wanted something that would be easy to remember and use.
 
 So, the **GTCodable** protocol came to life! It’s a combination of three different forces in Swift:
 
@@ -9,9 +9,10 @@ So, the **GTCodable** protocol came to life! It’s a combination of three diffe
 *   _Reflection_: The need to come up with a solution that would feel really natural without any weird workarounds led me towards Reflection, which even though is not that powerful in Swift and caused me a few troubles along the way, it made the difference by enabling me to access properties and values of objects in runtime and perform certain actions on them in a fully automatic fashion. For example, without reflection it wouldn’t be possible _to convert an object in to a dictionary_ (see more next) with GTCodable.
 *   _Encodable & Decodable Protocols_: Or in one word, the new _Codable_ protocol in Swift 4, which lets us JSON encode and decode at a blink of the eye. It’s not like the old _NSCoding_ protocol where we had to manually specify the properties to encode and decode. Encodable & Decodable protocols have vital effect on GTCodable.
 
-With GTCodable protocol I’m not reinventing the wheel, I’m just putting together different tools that Swift provides us with and I’m automating certain tasks. In a fast forward mode, here’s what GTCodable has to offer or it’s being capable of:
+With GTCodable protocol I’m not reinventing the wheel, I’m just putting together different tools that Swift provides us with and I’m automating certain tasks. In a fast forward mode, here’s what GTCodable has to offer:
 
-*   Save an object in JSON format, Plist file, or data file (archive made by _NSKeyedArchiver_) by calling one method only for each case (I don’t think it could be faster and more natural than that).
+*   Convert an object into a dictionary, JSON format, Plist file, or data file (archive made by NSKeyedArchiver) by just calling a simple method for each case (I don’t think it could be faster and more natural than that).
+*   Save a converted object as described above in the respective file format.
 *   Save manually JSON data, dictionary, or archive data to custom URLs with custom names.
 *   Exclude properties from being encoded or converted.
 *   Convert objects to dictionaries (have I said that?).
@@ -24,8 +25,8 @@ With GTCodable protocol I’m not reinventing the wheel, I’m just putting toge
 Of course, like every new game that respects itself, there are some rules to follow, so please keep reading about how to use GTCodable, or at least read the Rules section later in this document.
 
 
-How to Use It
---------------
+How to Use GTCodable
+--------------------
 
 Clone or download the repository and drag the _GTCodable.swift_ file into your iOS Swift project.
 
@@ -62,7 +63,7 @@ func getTextualRepresentation(fromJson:) -> String?
 func describeSelf() -> String
 ```
 
-GTCodable protocol contains some additional private functions that perform important work behind the scenes, but there’s no need to be listed here as they are not publicly available.
+GTCodable protocol contains some additional private functions that perform important work behind the scenes, but there’s no need to be listed here as they are used internally by the protocol only.
 
 
 Using GTCodable
