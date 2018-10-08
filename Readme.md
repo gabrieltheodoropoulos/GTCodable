@@ -3,7 +3,7 @@ About GTCodable
 
 As an iOS developer, I always wanted to have a really fast and natural way to convert data kept in a class or struct properties to dictionaries (key-value pairs), to JSON, or Plist files and vice versa. I wanted that mechanism to be totally generic and datatype independent, regardless of the number of properties and their kind existing in a class or a struct. I would always like to have a tool that would let me convert an object's data so it's easy to use them in RESTful APIs, or to assign fetched values to object properties without much effort. I also wanted to make it easy to save objects' data to files into the documents directory if possible in one move only, and to initialise objects by loading the stored data. And on top of all, I wanted something that would be easy to remember and use.
 
-So, the **GTCodable** protocol came to life! It’s a combination of three different forces in Swift:
+So, the **GTCodable** protocol came to life! It’s a combination of three different *forces* in Swift:
 
 *   _POP_ (Protocol Oriented Programming): It’s a _protocol_, it’s not a class, it’s not a struct. It’s a protocol with its extension and default function implementation, that allows any other custom class, struct or enum to conform to it and use its features right away.
 *   _Reflection_: The need to come up with a solution that would feel really natural without any weird workarounds led me towards Reflection, which even though is not that powerful in Swift and caused me a few troubles along the way, it made the difference by enabling me to access properties and values of objects in runtime and perform certain actions on them in a fully automatic fashion. For example, without reflection it wouldn’t be possible _to convert an object in to a dictionary_ (see more next) with GTCodable.
@@ -11,8 +11,8 @@ So, the **GTCodable** protocol came to life! It’s a combination of three diffe
 
 With GTCodable protocol I’m not reinventing the wheel, I’m just putting together different tools that Swift provides us with and I’m automating certain tasks. In a fast forward mode, here’s what GTCodable has to offer:
 
-*   Convert an object into a dictionary, JSON format, Plist file, or data file (archive made by NSKeyedArchiver) by just calling a simple method for each case (I don’t think it could be faster and more natural than that).
-*   Save a converted object as described above in the respective file format.
+*   Convert an object into a dictionary, JSON, Plist, or archived data (archive made by NSKeyedArchiver) by just calling a simple method for each case (I don’t think it could be faster and more natural than that).
+*   Save a converted object as described above to the respective file format.
 *   Save manually JSON data, dictionary, or archive data to custom URLs with custom names.
 *   Exclude properties from being encoded or converted.
 *   Convert objects to dictionaries (have I said that?).
