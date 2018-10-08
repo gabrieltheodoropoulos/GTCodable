@@ -1,12 +1,12 @@
 //
 //  GTCodable.swift
-//  GTCodableStorable
+//
 //
 //  Created by Gabriel Theodoropoulos.
 //  Copyright © 2018 Gabriel Theodoropoulos. All rights reserved.
 //
 
-import Foundation
+import UIKit
 
 protocol GTCodable: Codable {
     /// It creates a dictionary that contains the properties of the current object along with their values. Practically, it converts the current object into a dictionary.
@@ -194,6 +194,9 @@ protocol GTCodable: Codable {
     ///
     /// - Returns: The String that "describes" the current object.
     func describeSelf() -> String
+    
+    
+    init()
 }
 
 
@@ -208,13 +211,13 @@ extension GTCodable {
         
         // Go through all children of selfMirror.
         for (label, value) in selfMirror.children {
-            if !(value as AnyObject).isKind(of: NSNull.self) {
+//             print(label, value)
+            if !(value as AnyObject).isKind(of: NSNull.self) {   // !(value as AnyObject).isKind(of: NSNull.self)
                 // Does the label have a valid value?
                 if let label = label {
                     if label != "excludedProperties" && !isInExcludedProperties(property: label) {
                         // Get the mirror of the current child of the selfMirror.
                         let currentMirror = Mirror(reflecting: value)
-                        
                         if let ds = currentMirror.displayStyle {
                             // Keep the display style of the current value to a new variable.
                             // If the current value is Not an Optional, the displayStyle and ds will be the same.
@@ -224,10 +227,8 @@ extension GTCodable {
                             
                             // Handle the case where the current value is an Optional.
                             // The real type behind the optional must be determined.
-                            if displayStyle == .optional {
-                                if let specifiedDisplayType = specifyDisplayType(fromOptionalValue: value) {
-                                    displayStyle = specifiedDisplayType
-                                }
+                            if let specifiedDisplayType = specifyDisplayType(fromOptionalValue: value) {
+                                displayStyle = specifiedDisplayType
                             }
                             
                             if displayStyle == .collection {    // DisplayStyle = COLLECTION
@@ -247,6 +248,39 @@ extension GTCodable {
                                     if let val = value as? GTCodable {
                                         // If so keep the value.
                                         dict[label] = val.getRaw()
+                                        
+                                    }
+                                    else {
+                                        let typeOfValue: AnyObject.Type = type(of: (value as AnyObject))
+                                        
+                                        if typeOfValue == __DispatchData.self {
+                                            if let stringRepr = String(data: value as! Data, encoding: String.Encoding.utf8) {
+                                                dict[label] = stringRepr
+                                            }
+                                            else {
+                                                dict[label] = (value as! Data).base64EncodedString()
+                                            }
+                                        }
+                                        else if typeOfValue == type(of: NSDate()) {
+                                            dict[label] = (value as! Date).timeIntervalSinceReferenceDate
+                                        }
+                                        else {
+                                            if let valueAsCGPoint = value as? CGPoint {
+                                                dict[label] = [valueAsCGPoint.x, valueAsCGPoint.y]
+                                            }
+                                            else if let valueAsCGSize = value as? CGSize {
+                                                dict[label] = [valueAsCGSize.width, valueAsCGSize.height]
+                                            }
+                                            else if let valueAsCGRect = value as? CGRect {
+                                                dict[label] = [valueAsCGRect.origin.x, valueAsCGRect.origin.y, valueAsCGRect.size.width, valueAsCGRect.size.height]
+                                            }
+                                            else if let valueAsData = value as? Data {
+                                                dict[label] = valueAsData.base64EncodedString()
+                                            }
+                                            else {
+                                                dict[label] = value
+                                            }
+                                        }
                                     }
                                 }
                                 else if ds == .optional {
@@ -261,9 +295,14 @@ extension GTCodable {
                                         dict[label] = value.toDictionary()
                                     }
                                 }
-                                else if ds == .optional {
+                                else if ds == .optional || ds == .enum {
                                     if let value = currentMirror.children.first?.value as? GTCodable {
                                         dict[label] = value.toDictionary()
+                                    }
+                                }
+                                else if ds == .collection {    // DisplayStyle = COLLECTION
+                                    if let newCollection = process(collection: value, defaultDisplayStyle: ds, specifiedDisplayStyle: displayStyle) {
+                                        dict[label] = newCollection
                                     }
                                 }
                             }
@@ -307,7 +346,6 @@ extension GTCodable {
         if let _ = getExcludedProperties() {
             // In that case create a dictionary that will contain only the properties that should be encoded.
             let dict = toDictionary()
-            
             do {
                 // Convert the dictionary into a Data object.
                 let jsonData = try JSONSerialization.data(withJSONObject: dict, options: [JSONSerialization.WritingOptions.prettyPrinted, JSONSerialization.WritingOptions.sortedKeys])
@@ -563,6 +601,11 @@ extension GTCodable {
         
         return false
     }
+    
+    
+    init() {
+        self.init()
+    }
 }
 
 
@@ -764,7 +807,7 @@ extension GTCodable {
         if defaultDisplayStyle == specifiedDisplayStyle {
             collectionMirror = Mirror(reflecting: collection)
         }
-        else if defaultDisplayStyle == .optional {
+        else {
             if let val = collection as? [Any] {
                 collectionMirror = Mirror(reflecting: val)
             }
