@@ -1,7 +1,7 @@
 About GTCodable
 ---------------
 
-As an iOS developer, I always wanted to have a really fast and natural way to convert data kept in a class or struct properties to dictionaries (key-value pairs), to JSON, or Plist files and vice versa. I wanted that mechanism to be totally generic and datatype independent, regardless of the number of properties and their kind existing in a class or a struct. I would always like to have a tool that would let me convert an object's data so it's easy to use them in RESTful APIs, or to assign fetched values to object properties without much effort. I've also wanted to make it easy to save objects' data to files into the documents directory if possible in one move only, and to initialise objects by loading the stored data. And on top of all, I wanted something that would be easy to remember and use.
+As an iOS developer, I always wanted to have a really fast and natural way to convert data kept in a class or struct properties to dictionaries (key-value pairs), to JSON, or Plist files and vice versa. I wanted that mechanism to be totally generic and datatype independent, regardless of the number of properties and their kind existing in a class or a struct. I would always like to have a tool that would let me convert an object's data so it's easy to use them in RESTful APIs, or to assign fetched values to object properties without much effort. I also wanted to make it easy to save objects' data to files into the documents directory if possible in one move only, and to initialise objects by loading the stored data. And on top of all, I wanted something that would be easy to remember and use.
 
 So, the **GTCodable** protocol came to life! It’s a combination of three different forces in Swift:
 
