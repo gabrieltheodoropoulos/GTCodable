@@ -211,8 +211,7 @@ extension GTCodable {
         
         // Go through all children of selfMirror.
         for (label, value) in selfMirror.children {
-//             print(label, value)
-            if !(value as AnyObject).isKind(of: NSNull.self) {   // !(value as AnyObject).isKind(of: NSNull.self)
+            if !(value as AnyObject).isKind(of: NSNull.self) {
                 // Does the label have a valid value?
                 if let label = label {
                     if label != "excludedProperties" && !isInExcludedProperties(property: label) {
