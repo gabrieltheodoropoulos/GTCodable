@@ -5,7 +5,7 @@ As an iOS developer, I always wanted to have a really fast and natural way to co
 
 So, the **GTCodable** protocol came to life! It’s a combination of three different forces in Swift:
 
-*   _POP_ (Protocol Oriented Programming): It’s a _protocol_, it’s not a class, it’s not a struct. It’s a protocol with its extension and default function implementation, that allows any other custom class or struct to conform to it and use its features right away.
+*   _POP_ (Protocol Oriented Programming): It’s a _protocol_, it’s not a class, it’s not a struct. It’s a protocol with its extension and default function implementation, that allows any other custom class, struct or enum to conform to it and use its features right away.
 *   _Reflection_: The need to come up with a solution that would feel really natural without any weird workarounds led me towards Reflection, which even though is not that powerful in Swift and caused me a few troubles along the way, it made the difference by enabling me to access properties and values of objects in runtime and perform certain actions on them in a fully automatic fashion. For example, without reflection it wouldn’t be possible _to convert an object in to a dictionary_ (see more next) with GTCodable.
 *   _Encodable & Decodable Protocols_: Or in one word, the new _Codable_ protocol in Swift 4, which lets us JSON encode and decode at a blink of the eye. It’s not like the old _NSCoding_ protocol where we had to manually specify the properties to encode and decode. Encodable & Decodable protocols have vital effect on GTCodable.
 
